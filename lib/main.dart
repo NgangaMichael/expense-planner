@@ -1,9 +1,6 @@
-import 'dart:ui';
-
 import 'package:expense_planner/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -24,8 +21,16 @@ class MyHomePage extends StatelessWidget {
     Transaction(id: 't3', title: 'Food', amount: 350.57, date: DateTime.now()),
   ];
 
+  // late String titleInput;
+  // late String amountInput;
+
+  final textController = TextEditingController();
+  final amountController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter App'),
@@ -39,6 +44,38 @@ class MyHomePage extends StatelessWidget {
               child: const Text('CHART!'),
             ),
           ),
+
+          Card(
+            elevation: 5,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  TextField(decoration: InputDecoration(labelText: 'Title'),
+                  controller: textController,
+                    // onChanged: (val) {
+                    //   titleInput = val;
+                    // },
+                  ),
+                  TextField(decoration: InputDecoration(labelText: 'Amount'),
+                  controller: amountController,
+                    // onChanged: (val) {
+                    //   amountInput = val;
+                    // },
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      print(textController.text);
+                      print(amountController.text);
+                    },
+                    textColor: Colors.purple,
+                    child: Text('Add transaction'))
+                ],
+              ),
+            ),
+          ),
+
           Column(
             children: transaction.map((tx) {
               return Card(
