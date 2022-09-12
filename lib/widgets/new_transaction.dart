@@ -1,12 +1,36 @@
 import 'package:flutter/material.dart';
 
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   // const NewTransaction({Key? key}) : super(key: key);
   final Function addTx;
-  final textController = TextEditingController();
-  final amountController = TextEditingController();
 
   NewTransaction(this.addTx);
+
+  @override
+  State<NewTransaction> createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final textController = TextEditingController();
+
+  final amountController = TextEditingController();
+
+  void submitData() {
+
+    final enterdTitle = textController.text;
+    final enterdAmount = double.parse(amountController.text);
+
+    if(enterdTitle.isEmpty || enterdAmount <= 0) {
+      return;
+    }
+
+    widget.addTx(
+      enterdTitle,
+      enterdAmount,
+    );
+
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,24 +43,23 @@ class NewTransaction extends StatelessWidget {
                 children: [
                   TextField(decoration: InputDecoration(labelText: 'Title'),
                   controller: textController,
+                  onSubmitted: (_) => submitData(),
+
                     // onChanged: (val) {
                     //   titleInput = val;
                     // },
                   ),
                   TextField(decoration: InputDecoration(labelText: 'Amount'),
                   controller: amountController,
+                  keyboardType: TextInputType.number,
+                  // the underscrore mean i get an argumrnt but i dont use it 
+                  onSubmitted: (_) => submitData(),
                     // onChanged: (val) {
                     //   amountInput = val;
                     // },
                   ),
                   FlatButton(
-                    onPressed: () {
-                      addTx(
-                        textController.text, 
-                        double.parse(amountController.text));
-                      // print(textController.text);
-                      // print(amountController.text);
-                    },
+                    onPressed: submitData,
                     textColor: Colors.purple,
                     child: Text('Add transaction'))
                 ],
