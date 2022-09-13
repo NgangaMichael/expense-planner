@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:expense_planner/widgets/chart.dart';
 import 'package:expense_planner/widgets/new_transaction.dart';
 import 'package:expense_planner/widgets/transaction_list.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,16 @@ class _MyHomePageState extends State<MyHomePage> {
     // Transaction(id: 't3', title: 'Food', amount: 350.57, date: DateTime.now()),
   ];
 
+  List<Transaction> get _recentTransaction {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        )
+      );
+    }).toList();
+  }
+
   void _addNewTransaction(String txTitle, double txAmount){
     final newTx = Transaction(
       id: DateTime.now().toString(), 
@@ -92,13 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body:SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              child: const Card(
-                color: Colors.blue,
-                child: const Text('CHART!'),
-              ),
-            ),
+            Chart(_recentTransaction),
       
             TransactionList(_userTransactions)
           ],
