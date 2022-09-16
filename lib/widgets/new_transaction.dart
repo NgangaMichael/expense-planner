@@ -18,17 +18,21 @@ class _NewTransactionState extends State<NewTransaction> {
   DateTime _selectedDate = DateTime.now();
 
   void _submitData() {
-
+    if(_amountController.text.isEmpty) {
+      return;
+    }
     final enterdTitle = _textController.text;
     final enterdAmount = double.parse(_amountController.text);
 
-    if(enterdTitle.isEmpty || enterdAmount <= 0) {
+    if(enterdTitle.isEmpty || enterdAmount <= 0 || _selectedDate == null) {
       return;
     }
 
+  // adding transaction wich is passed to main dart 
     widget.addTx(
       enterdTitle,
       enterdAmount,
+      _selectedDate,
     );
 
     Navigator.of(context).pop();
