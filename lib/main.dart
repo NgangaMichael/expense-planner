@@ -111,6 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
 
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+
     final appbar= AppBar(
         title: const Text('Personal Expenses'),
         actions: [
@@ -120,11 +122,19 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       );
+
+      final textWidget = Container(
+        height: (MediaQuery.of(context).size.height - appbar.preferredSize.height
+        - MediaQuery.of(context).padding.top) * 0.7,
+        child: TransactionList(_userTransactions, _deleteTransaction)
+      );
     return Scaffold(
       appBar: appbar,
       body:SingleChildScrollView(
         child: Column(
           children: [
+            // special if that doesnt need {()} 
+            if(isLandscape)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -139,16 +149,22 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
 
+            if(!isLandscape)
+            Container(
+              height: (MediaQuery.of(context).size.height - appbar.preferredSize.height
+              - MediaQuery.of(context).padding.top) * 0.3,
+              child: Chart(_recentTransaction)
+            ),
+
+            if(!isLandscape) textWidget,
+
+            if(isLandscape)
             _showChart ? Container(
               height: (MediaQuery.of(context).size.height - appbar.preferredSize.height
               - MediaQuery.of(context).padding.top) * 0.6,
               child: Chart(_recentTransaction)
             )
-            : Container(
-              height: (MediaQuery.of(context).size.height - appbar.preferredSize.height
-              - MediaQuery.of(context).padding.top) * 0.7,
-              child: TransactionList(_userTransactions, _deleteTransaction)
-            )
+            : textWidget
           ],
         ),
       ),
