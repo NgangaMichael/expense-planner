@@ -1,10 +1,16 @@
+import 'dart:ffi';
 import 'dart:ui';
+// .io is for IOS look 
+import 'dart:io';
+
+// cupertino is for loading IOS scafold while matrial is for android 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:expense_planner/widgets/chart.dart';
 import 'package:expense_planner/widgets/new_transaction.dart';
 import 'package:expense_planner/widgets/transaction_list.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'models/transaction.dart';
 void main() {
@@ -23,7 +29,37 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return MaterialApp(
+    // if platform is IOS is will return IOS app else will be android the code is commented coz it has errors 
+    return 
+    // Platform.isIOS ? CupertinoApp(
+    //   title: 'Personal Expenses',
+    //   theme: CupertinoThemeData(
+    //     primarySwatch: Colors.purple,
+    //     accentColor: Colors.amber,
+    //     fontFamily: 'Quicksand',
+        
+    //     textTheme :ThemeData.light().textTheme.copyWith(
+    //         subtitle1: TextStyle(
+    //           fontFamily: 'OpenSans',
+    //           fontSize: 18,
+    //           fontWeight: FontWeight.bold,
+    //         ),
+    //         button: TextStyle(color: Colors.white)
+    //       ),
+
+    //       appBarTheme: AppBarTheme(
+    //         titleTextStyle: TextStyle(
+    //           fontFamily: 'OpenSans',
+    //           fontSize: 20,
+    //           fontWeight: FontWeight.bold
+    //         )
+    //       )
+        
+    //   ),
+    //   home: MyHomePage(),
+    // )
+    // : 
+    MaterialApp(
       title: 'Personal Expenses',
       theme: ThemeData(
         primarySwatch: Colors.purple,
@@ -114,7 +150,27 @@ class _MyHomePageState extends State<MyHomePage> {
     final mediaquery = MediaQuery.of(context);
     final isLandscape = mediaquery.orientation == Orientation.landscape;
     
-    final appbar= AppBar(
+    final  dynamic appbar = Platform.isIOS ? 
+    CupertinoNavigationBar(
+      middle: const Text(
+        'Personal Expenses'
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            child: Icon(CupertinoIcons.add),
+            onTap: () => _startAddNewTransaction(context),
+          ),
+          IconButton(
+            onPressed: () => _startAddNewTransaction(context),
+            icon: Icon(Icons.add)
+          )
+        ],
+      ),
+    ) 
+    
+    : AppBar(
         title: const Text('Personal Expenses'),
         actions: [
           IconButton(
@@ -129,9 +185,10 @@ class _MyHomePageState extends State<MyHomePage> {
         - mediaquery.padding.top) * 0.7,
         child: TransactionList(_userTransactions, _deleteTransaction)
       );
-    return Scaffold(
-      appBar: appbar,
-      body:SingleChildScrollView(
+
+      // safe area widget is for respection areas that cant be coverd by the app 
+      final pageBody = SafeArea(
+        child: SingleChildScrollView(
         child: Column(
           children: [
             // special if that doesnt need {()} 
@@ -140,7 +197,8 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('Show chart'),
-                Switch(value: _showChart, 
+                // you add .adaptive to have IOS look and android look separatly on one code 
+                Switch.adaptive(value: _showChart, 
                 onChanged: (val) {
                   setState(() {
                     _showChart = val;
@@ -168,9 +226,21 @@ class _MyHomePageState extends State<MyHomePage> {
             : textWidget
           ],
         ),
-      ),
+      ));
+
+    return Platform.isIOS ? CupertinoPageScaffold(
+      navigationBar: appbar,
+      child: pageBody,
+    ) 
+    
+    : Scaffold(
+      appBar: appbar,
+      body: pageBody,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
+      // if its IOS then dont show the button 
+      floatingActionButton: Platform.isIOS ? Container()
+      :
+       FloatingActionButton(
         onPressed: () => _startAddNewTransaction(context),
         child: Icon(Icons.add), 
       ),
