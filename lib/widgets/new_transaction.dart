@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:expense_planner/widgets/addaptiveBUttons.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -93,14 +97,8 @@ class _NewTransactionState extends State<NewTransaction> {
                             'Picked Date: ${DateFormat.yMd().format(_selectedDate)}'
                           ),
                         ),
-                        FlatButton(
-                          textColor: Theme.of(context).primaryColor,
-                          onPressed: _presentDatePicker, 
-                          child: Text('Chose Date', 
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ))
+                        // this is imported from addaptive buttons then we run it here for clean code 
+                        AddaptiveButtons('Choose date', _presentDatePicker)
                       ],
                     ),
                   ),
