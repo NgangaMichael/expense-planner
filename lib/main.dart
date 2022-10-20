@@ -144,6 +144,45 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List<Widget> _buildLandScapeContent(
+    MediaQueryData mediaquery, 
+    AppBar appbar,
+    Widget textWidget
+  ){
+    return [Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Show chart'),
+        // you add .adaptive to have IOS look and android look separatly on one code 
+        Switch.adaptive(value: _showChart, 
+        onChanged: (val) {
+          setState(() {
+            _showChart = val;
+          });
+        }
+        ),
+      ],
+    ), _showChart ? Container(
+      height: (mediaquery.size.height - appbar.preferredSize.height
+      - mediaquery.padding.top) * 0.6,
+      child: Chart(_recentTransaction)
+    )
+    : textWidget
+    ];
+  }
+
+  List<Widget> _buildPortraitContent(
+    MediaQueryData mediaquery, 
+    AppBar appbar,
+    Widget textWidget
+    ){
+    return [Container(
+      height: (mediaquery.size.height - appbar.preferredSize.height
+      - mediaquery.padding.top) * 0.3,
+      child: Chart(_recentTransaction)
+    ), textWidget];
+  }
+
   @override
   Widget build(BuildContext context) {
     // stooring media query ina avariable for reusage 
@@ -192,38 +231,18 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             // special if that doesnt need {()} 
-            if(isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Show chart'),
-                // you add .adaptive to have IOS look and android look separatly on one code 
-                Switch.adaptive(value: _showChart, 
-                onChanged: (val) {
-                  setState(() {
-                    _showChart = val;
-                  });
-                }
-                ),
-              ],
+            if(isLandscape) ..._buildLandScapeContent(
+              mediaquery, 
+              appbar, 
+              textWidget
             ),
 
-            if(!isLandscape)
-            Container(
-              height: (mediaquery.size.height - appbar.preferredSize.height
-              - mediaquery.padding.top) * 0.3,
-              child: Chart(_recentTransaction)
+            if(!isLandscape) ..._buildPortraitContent(
+              mediaquery, 
+              appbar, 
+              textWidget
             ),
-
-            if(!isLandscape) textWidget,
-
-            if(isLandscape)
-            _showChart ? Container(
-              height: (mediaquery.size.height - appbar.preferredSize.height
-              - mediaquery.padding.top) * 0.6,
-              child: Chart(_recentTransaction)
-            )
-            : textWidget
+            
           ],
         ),
       ));
