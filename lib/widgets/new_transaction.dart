@@ -76,9 +76,7 @@ class _NewTransactionState extends State<NewTransaction> {
 
   void _presentDatePicker() {
     Future.delayed(Duration.zero,(){
-
-    });
-    showDatePicker(
+      showDatePicker(
       context: context, 
       initialDate: DateTime.now(), 
       firstDate: DateTime(2022), 
@@ -92,6 +90,8 @@ class _NewTransactionState extends State<NewTransaction> {
         _selectedDate = pickedDate;
       });
     });
+    });
+    
   }
 
   @override
