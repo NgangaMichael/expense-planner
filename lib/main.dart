@@ -67,15 +67,15 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Quicksand',
         
         textTheme :ThemeData.light().textTheme.copyWith(
-            subtitle1: TextStyle(
+            subtitle1: const TextStyle(
               fontFamily: 'OpenSans',
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
-            button: TextStyle(color: Colors.white)
+            button: const TextStyle(color: Colors.white)
           ),
 
-          appBarTheme: AppBarTheme(
+          appBarTheme: const AppBarTheme(
             titleTextStyle: TextStyle(
               fontFamily: 'OpenSans',
               fontSize: 20,
@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return _userTransactions.where((tx) {
       return tx.date.isAfter(
         DateTime.now().subtract(
-          Duration(days: 7),
+          const Duration(days: 7),
         )
       );
     }).toList();
@@ -144,6 +144,38 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Widget _buildAppBar() {
+    return Platform.isIOS ? 
+    CupertinoNavigationBar(
+      middle: const Text(
+        'Personal Expenses'
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            child: Icon(CupertinoIcons.add),
+            onTap: () => _startAddNewTransaction(context),
+          ),
+          IconButton(
+            onPressed: () => _startAddNewTransaction(context),
+            icon: Icon(Icons.add)
+          )
+        ],
+      ),
+    ) 
+    
+    : AppBar(
+        title: const Text('Personal Expenses'),
+        actions: [
+          IconButton(
+            onPressed: () => _startAddNewTransaction(context), 
+            icon: Icon(Icons.add)
+          )
+        ],
+      );
+  }
+
   List<Widget> _buildLandScapeContent(
     MediaQueryData mediaquery, 
     AppBar appbar,
@@ -152,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return [Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Show chart'),
+        const Text('Show chart'),
         // you add .adaptive to have IOS look and android look separatly on one code 
         Switch.adaptive(value: _showChart, 
         onChanged: (val) {
@@ -188,36 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // stooring media query ina avariable for reusage 
     final mediaquery = MediaQuery.of(context);
     final isLandscape = mediaquery.orientation == Orientation.landscape;
-    
-    final  dynamic appbar = Platform.isIOS ? 
-    CupertinoNavigationBar(
-      middle: const Text(
-        'Personal Expenses'
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-            child: Icon(CupertinoIcons.add),
-            onTap: () => _startAddNewTransaction(context),
-          ),
-          IconButton(
-            onPressed: () => _startAddNewTransaction(context),
-            icon: Icon(Icons.add)
-          )
-        ],
-      ),
-    ) 
-    
-    : AppBar(
-        title: const Text('Personal Expenses'),
-        actions: [
-          IconButton(
-            onPressed: () => _startAddNewTransaction(context), 
-            icon: Icon(Icons.add)
-          )
-        ],
-      );
+    final  dynamic appbar = _buildAppBar();
 
       final textWidget = Container(
         height: (mediaquery.size.height - appbar.preferredSize.height

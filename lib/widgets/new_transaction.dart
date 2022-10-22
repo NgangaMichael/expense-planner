@@ -9,10 +9,16 @@ class NewTransaction extends StatefulWidget {
   // const NewTransaction({Key? key}) : super(key: key);
   final Function addTx;
 
-  NewTransaction(this.addTx);
+  NewTransaction(this.addTx){
+    print('contructor new transaction widget');
+  }
 
   @override
-  State<NewTransaction> createState() => _NewTransactionState();
+  State<NewTransaction> createState() {
+    print('create state new transaction widget');
+    return  _NewTransactionState();
+  } 
+
 }
 
 class _NewTransactionState extends State<NewTransaction> {
@@ -20,6 +26,32 @@ class _NewTransactionState extends State<NewTransaction> {
   final _amountController = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
+
+  _NewTransactionState() {
+    print('constaractor new transaction state');
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print('initstate()');
+
+  }
+
+  @override
+  void didUpdateWidget(covariant NewTransaction oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    print('didupdatewidget()');
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print('dispose()');
+  }
 
   void _submitData() {
     if(_amountController.text.isEmpty) {
@@ -43,6 +75,9 @@ class _NewTransactionState extends State<NewTransaction> {
   }
 
   void _presentDatePicker() {
+    Future.delayed(Duration.zero,(){
+
+    });
     showDatePicker(
       context: context, 
       initialDate: DateTime.now(), 
