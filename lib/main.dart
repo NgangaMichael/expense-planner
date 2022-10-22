@@ -95,7 +95,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+// added a mixinn 
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   
   final List<Transaction> _userTransactions = [
     // Transaction(id: 't1', title: 'New shoes', amount: 500.34, date: DateTime.now()),
@@ -104,6 +105,28 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   bool _showChart = false;
+
+  @override
+  void initState() {
+    // this line tells flutter that whenevre app cycle changes take didchange..and bind it here 
+    WidgetsBinding.instance.addObserver(this);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  // added mixin method override 
+  // method will be called whenever lifecycle changes 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+  }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
 
   List<Transaction> get _recentTransaction {
     return _userTransactions.where((tx) {
